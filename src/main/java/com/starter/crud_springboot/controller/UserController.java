@@ -2,6 +2,7 @@ package com.starter.crud_springboot.controller;
 
 import com.starter.crud_springboot.dto.UserDTO;
 import com.starter.crud_springboot.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO.GetUserDTO> createUser(@RequestBody UserDTO.CreateUserDTO dto) {
+    public ResponseEntity<UserDTO.GetUserDTO> createUser(@Valid @RequestBody UserDTO.CreateUserDTO dto) {
         return new ResponseEntity<>(userService.createUser(dto), HttpStatus.CREATED);
     }
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO.GetUserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO.UpdateUserDTO dto) {
+    public ResponseEntity<UserDTO.GetUserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO.UpdateUserDTO dto) {
         return userService.updateUser(id, dto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
