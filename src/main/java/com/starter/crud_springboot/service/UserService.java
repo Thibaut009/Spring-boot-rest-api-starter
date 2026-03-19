@@ -2,6 +2,7 @@ package com.starter.crud_springboot.service;
 
 import com.starter.crud_springboot.dto.UserDTO;
 import com.starter.crud_springboot.entity.User;
+import com.starter.crud_springboot.exception.EmailAlreadyInUseException;
 import com.starter.crud_springboot.mapper.UserMapper;
 import com.starter.crud_springboot.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,11 +30,13 @@ public class UserService {
     }
 
     public UserDTO.GetUserDTO createUser(UserDTO.CreateUserDTO dto) {
-        User user = UserMapper.toEntity(dto);
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new EmailAlreadyInUseException(dto.getEmail());
+        }
 
+        User user = UserMapper.toEntity(dto);
         // 🔐 Encodage ici uniquement
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-
         return UserMapper.toDTO(userRepository.save(user));
     }
 
