@@ -5,6 +5,11 @@ import com.starter.crud_springboot.entity.User;
 import com.starter.crud_springboot.exception.EmailAlreadyInUseException;
 import com.starter.crud_springboot.mapper.UserMapper;
 import com.starter.crud_springboot.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +17,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+@RequiredArgsConstructor
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .map(user -> org.springframework.security.core.userdetails.User.builder()
+                        .username(user.getEmail())
+                        .password(user.getPassword())
+                        .roles("USER")
+                        .build())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 
     public List<UserDTO.GetUserDTO> getAllUsers() {
