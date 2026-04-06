@@ -3,6 +3,7 @@ package com.starter.crud_springboot.controller;
 import com.starter.crud_springboot.dto.UserDTO;
 import com.starter.crud_springboot.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,14 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public ResponseEntity<List<UserDTO.GetUserDTO>> getAllUsers() {

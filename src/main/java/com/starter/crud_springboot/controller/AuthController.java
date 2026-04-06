@@ -4,19 +4,17 @@ import com.starter.crud_springboot.dto.AuthDTO;
 import com.starter.crud_springboot.dto.UserDTO;
 import com.starter.crud_springboot.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/login")
     public AuthDTO.LoginResponse login(@Valid @RequestBody AuthDTO.LoginRequest request) {
