@@ -1,5 +1,6 @@
 package com.starter.crud_springboot.dto;
 
+import com.starter.crud_springboot.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,11 +10,11 @@ import lombok.NoArgsConstructor;
 
 public class UserDTO {
 
-    public record GetUserDTO(
-            Long id,
-            String name,
-            String email
-    ) {}
+    public record GetUserDTO(Long id, String name, String email) {
+        public GetUserDTO(User user) {
+            this(user.getId(), user.getName(), user.getEmail());
+        }
+    }
 
     @Data
     @AllArgsConstructor
